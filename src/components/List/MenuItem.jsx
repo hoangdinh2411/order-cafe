@@ -18,7 +18,7 @@ function MenuItem(props) {
         <img src={addButton} alt='add' />
       </span>
       <div className='info'>
-        <p className='name-cafe'>{title} </p>
+        <p className='main-text'>{title} </p>
         <p className='sub-text'>{desc} </p>
       </div>
       <span className='price'>{price} kr</span>

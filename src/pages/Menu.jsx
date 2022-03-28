@@ -2,12 +2,20 @@ import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import useAPI from '../hooks/useAPI';
-
-import MenuItem from '../components/List/MenuItem';
+import Modal from '../components/Modal';
+import Cart from '../pages/Cart';
+import MenuItem from '@/components/List/MenuItem';
 
 
 function Menu() {
-  const {menu, fetchingMenu} = useAPI();
+  const {menu, fetchingMenu,handleRefreshOrders} = useAPI();
+  const [openModal, setOpenModal] = React.useState(false);
+
+  const handleClose = () => {
+    setOpenModal(false);
+    handleRefreshOrders()
+  
+  };
   React.useEffect(() => {
     fetchingMenu();
   }, []);
@@ -16,7 +24,7 @@ function Menu() {
     <>
       
       <div className='menu-container'>
-        <Header />
+        <Header handleOpenModal={()=>setOpenModal(true)} />
         <div className='menu-content'>
           <h2 className='heading'>Meny</h2>
           <ul className='list'>
@@ -27,6 +35,9 @@ function Menu() {
               : null}
           </ul>
         </div>
+        <Modal open={openModal} handleClose={handleClose}>
+          <Cart handleClose={handleClose} />
+        </Modal>
         <Footer />
       </div>
     </>

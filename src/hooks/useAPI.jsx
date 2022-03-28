@@ -1,7 +1,9 @@
 import React from 'react';
 import {SET_MENU, SET_ORDERS} from '../store/appSlice';
 import {useSelector, useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 function useAPI() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const menu = useSelector((state) => state.app.menu);
   const orders = useSelector(
@@ -12,7 +14,9 @@ function useAPI() {
   );
 
   const fetchingMenu = async () => {
-    await fetch('http://localhost:5000/api/beans')
+    await fetch('http://localhost:5000/api/beans', {
+      method: 'GET',
+    })
       .then((response) => {
         return response.json();
       })
@@ -54,10 +58,56 @@ function useAPI() {
     }
     const total = totalProduct + 1;
 
+    dispatch(SET_ORDERS({list: newOrder, total}));
+    return;
+  };
+
+  const handleChangeAmount = (productId, number) => {
+    const newOrders = orders.map((order) => {
+      if (order.id === productId) {
+        return {
+          ...order,
+          amount: order.amount + number,
+        };
+      }
+
+      return order;
+    });
+    const total = totalProduct + number;
+    dispatch(SET_ORDERS({list: newOrders, total}));
+    return;
+  };
+
+  const handleRefreshOrders = () => {
+    const newOrders = orders.filter(
+      (order) => order.amount > 0
+    );
     dispatch(
-      SET_ORDERS({list: newOrder, total})
+      SET_ORDERS({list: newOrders, total: totalProduct})
     );
     return;
+  };
+
+  const handleCompleteOrder = async () => {
+    await fetch('http://localhost:5000/api/beans', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orders),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch(SET_ORDERS({list: [], total: 0}));
+        navigate('/status', {state: data});
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleResetStates = () => {
+    return 
   };
 
   return {
@@ -66,6 +116,9 @@ function useAPI() {
     orders,
     fetchingMenu,
     handleOrderCafe,
+    handleChangeAmount,
+    handleRefreshOrders,
+    handleCompleteOrder,
   };
 }
 

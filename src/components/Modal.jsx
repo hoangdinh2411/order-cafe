@@ -1,7 +1,6 @@
 import React from 'react';
 
 function Modal({children, open, handleClose}) {
-  console.log(handleClose)
   if (!open) return null;
   return (
     <div className='modal'>
