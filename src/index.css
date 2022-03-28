@@ -322,6 +322,10 @@ body {
   justify-items: center;
 }
 
+.pay-btn:disabled{
+  opacity: 0.4;
+}
+
 .total {
   display: flex;
   align-items: center;
@@ -377,3 +381,4 @@ body {
   font-size: 24px;
   font-weight: 700;
 }
+

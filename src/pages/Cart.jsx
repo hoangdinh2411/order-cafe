@@ -3,9 +3,9 @@ import CartItem from '../components/List/CartItem';
 import useAPI from '../hooks/useAPI';
 
 function Cart({handleClose}) {
-  const {orders,handleCompleteOrder} = useAPI();
+  const {orders, totalProduct ,handleCompleteOrder} = useAPI();
   const [total, setTotal] = React.useState(0);
-  console.log(orders)
+  console.log(orders);
   React.useEffect(() => {
     const totalPrice = orders.reduce((prev, current) => {
       if (current.amount <= 0) {
@@ -37,7 +37,13 @@ function Cart({handleClose}) {
           <span className='price'>{total} kr</span>
         </div>
       </div>
-      <button type='button' className='btn pay-btn' onClick={handleCompleteOrder}>
+      <button
+
+        type='button'
+        className='btn pay-btn'
+        disabled={totalProduct ===0 ? true : false}
+        onClick={handleCompleteOrder}
+      >
         Take my money!
       </button>
     </div>
